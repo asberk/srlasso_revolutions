@@ -1,0 +1,24 @@
+* Variational properties of the square root LASSO: well-posedness, Lipschitz stability and numerical consequences
+
+Aaron Berk^1, Simone Brugiapaglia^2 and Tim Hoheisel^1
+
+1. Department of Mathematics & Statistics, McGill University, Montreal, Canada
+2. Department of Mathematics & Statistics, Concordia University, Montreal, Canada
+
+
+** Repository contents
+
+
+The two main scripts in this repository, used to generate Figures 2 and 3,
+respectively, are:
+
+- srlasso_inexact_empirical_uniqueness_sufficiency_crosssection.py
+- srlasso_inexact_empirical_uniqueness_sufficiency_experiment.py
+
+The supporting code for these scripts is distributed amongst:
+  
+- solve.py
+- solve_utils.py
+- utils.py
+- viz.py
+
