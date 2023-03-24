@@ -10,28 +10,28 @@ Aaron Berk^1, Simone Brugiapaglia^2 and Tim Hoheisel^1
 
 A detailed description of elementary components of the experimental setup (like
 support computation, matrix rank computation, etc.) are furnished in
-[numerical_implementation_details.pdf](./appendix_d/numerical_implementation_details.pdf)
+[numerical_implementation_details.pdf](../blob/master/appendix_d/numerical_implementation_details.pdf)
 
 The scripts for generating Figures 1a and 1b are:
 
-- [figure_1a.py](./figure_1a.py)
-- [figure_1b.py](./figure_1b.py)
+- [figure_1a.py](../blob/master/figure_1a.py)
+- [figure_1b.py](../blob/master/figure_1b.py)
 
 The two main scripts in this repository, used to generate Figures 5 and 6,
 respectively, are:
 
-- [srlasso_inexact_empirical_uniqueness_sufficiency_crosssection.py](./srlasso_inexact_empirical_uniqueness_sufficiency_crosssection.py)
-- [srlasso_inexact_empirical_uniqueness_sufficiency_experiment.py](./srlasso_inexact_empirical_uniqueness_sufficiency_experiment.py)
+- [srlasso_inexact_empirical_uniqueness_sufficiency_crosssection.py](../blob/master/srlasso_inexact_empirical_uniqueness_sufficiency_crosssection.py)
+- [srlasso_inexact_empirical_uniqueness_sufficiency_experiment.py](../blob/master/srlasso_inexact_empirical_uniqueness_sufficiency_experiment.py)
 
 The final figure was created using:
 
-- [lipschitzness_srlasso.py](./lipschitzness_srlasso.py)
+- [lipschitzness_srlasso.py](../blob/master/lipschitzness_srlasso.py)
 
 The supporting code for these scripts is distributed amongst:
   
-- [solve.py](./solve.py)
-- [solve_utils.py](./solve_utils.py)
-- [uclasso_utils.py](./uclasso_utils.py)
-- [utils.py](./utils.py)
-- [viz.py](./viz.py)
+- [solve.py](../blob/master/solve.py)
+- [solve_utils.py](../blob/master/solve_utils.py)
+- [uclasso_utils.py](../blob/master/uclasso_utils.py)
+- [utils.py](../blob/master/utils.py)
+- [viz.py](../blob/master/viz.py)
 
