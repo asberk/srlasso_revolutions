@@ -24,25 +24,6 @@ from solve_utils import lipschitz_bound_lamda, lipschitz_bound_b_lamda
 DO_GENERATE_DATA = False
 
 
-def basic_test_plot(lamdas, lipschitz_ub, errors):
-    plt.style.use("/Users/aberk/code/theme_bw.mplstyle")
-    plt.rcParams["font.size"] = 14
-    plt.rcParams["lines.linewidth"] = 2
-    plt.rcParams["axes.labelsize"] = 14
-    plt.rcParams["mathtext.fontset"] = "cm"
-
-    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-
-    ax.plot(lamdas[lipschitz_ub > 0], lipschitz_ub[lipschitz_ub > 0])
-    ax.plot(lamdas, errors)
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-
-    plt.show()
-    plt.close("all")
-    del fig, ax
-
-
 def make_lipschitzness_plot(
     lamdas,
     lipsch_empir,
