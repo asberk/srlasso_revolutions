@@ -17,12 +17,16 @@ def lamda_sr_best(m):
     return 1.1 * norm.ppf(1 - 0.05 / (2 * m))
 
 
-def support(x_bar, A, b, lamda, y_bar):
+def support(x_bar, A, b, lamda, y_bar=None):
     if not is_inexact_solution(A, b, x_bar):
         raise ValueError(
             "fancy_get_support is not designed for x_bar such that A @ x_bar = b"
         )
-    J = equicorrelation(A, y_bar, lamda)
+    if y_bar is None:
+        y_bar = b.ravel() - A.dot(x_bar).ravel()
+        J = equicorrelation(A, y_bar, la.norm(y_bar) * lamda)
+    else:
+        J = equicorrelation(A, y_bar, lamda)
     supp = J * (~np.isclose(x_bar, 0))
     supp = supp.ravel()
     mask = ~supp
@@ -118,3 +122,85 @@ def generate_data(m, n, s, gamma=None, seed=None):
     x0[:s] = m + m**0.5 * np.random.randn(s)
     b = A @ x0 + gamma * np.random.randn(m)
     return A, b, x0
+
+
+def lipschitz_bound_b_lamda(x_bar, A, b, lamda, y_bar):
+    """NOT USED"""
+    assert x_bar.size == np.max(x_bar.shape)
+    x_bar = x_bar.ravel()
+    supp, mask = support(x_bar, A, b, lamda, y_bar)
+    s_ = supp.sum()
+
+    if s_ < 1:
+        return 0.0
+
+    AI = A[:, supp]
+
+    r = A.dot(x_bar) - b
+    v = r / la.norm(r)
+
+    AIdagv, _, rank, singvals = la.lstsq(AI, v, rcond=None)
+
+    if rank != s_:
+        print(
+            f"Warning: A_I is a rank-deficient matrix. rank: {rank} s_: {s_}."
+        )
+        return np.nan
+
+    sigma_min = singvals[-1]
+    sigma_max2 = la.svd(
+        AI.T.dot(np.eye(v.size) - v.reshape(-1, 1).dot(v.reshape(1, -1))),
+        compute_uv=False,
+    )[0]
+    AITv = AI.T.dot(v)
+    vTAIAIdagv = v.dot(AI).dot(AIdagv)
+    quantity1 = (
+        AITv.dot(AITv) * (1 + vTAIAIdagv) / (1 - vTAIAIdagv**2)
+        + 1 / sigma_min**2
+    )
+    quantity2 = sigma_max2 + la.norm(AI.T.dot(r) / lamda)
+
+    return quantity1 * quantity2
+
+
+def lipschitz_bound_lamda(x_bar, A, b, lamda, y_bar=None):
+    assert x_bar.size == np.max(x_bar.shape)
+    x_bar = x_bar.ravel()
+    supp, mask = support(x_bar, A, b, lamda, y_bar)
+    s_ = supp.sum()
+
+    if s_ < 1:
+        return 0.0
+
+    AI = A[:, supp]
+
+    r = A.dot(x_bar) - b
+    R = la.norm(r)
+    v = r / R
+
+    AIdagv, _, rank, singvals = la.lstsq(AI, v, rcond=None)
+
+    if rank != s_:
+        print(
+            f"Warning: A_I is a rank-deficient matrix. rank: {rank} s_: {s_}."
+        )
+        return np.nan
+
+    vTAIAIdagv = v.dot(AI).dot(AIdagv)
+
+    out = la.norm(AIdagv) * R / lamda / np.abs(1 - vTAIAIdagv)
+    return out
+
+
+def lipschitz_bound_ratio(x_bar, A, b, lamda, y_bar):
+    """Compute the quantity
+    |1 - v^T.A_I.A_I^dagger.v|
+    where v = r/norm(r) with r = b - A.x_bar.
+    Assuming x_bar_sr approx x_bar_uc and I_sr approx I_uc, this quantity is the
+    "discrepancy" between the UC and SR local Lipschitz bounds.
+    """
+    supp, _ = support(x_bar, A, b, lamda, y_bar)
+    AI = A[:, supp]
+    rho, _, rank, svdvals = la.lstsq(AI, y_bar.ravel(), rcond=None)
+    V = y_bar.dot(AI.dot(rho))
+    return np.abs(1 - V)
