@@ -96,7 +96,7 @@ def strong_assumption(x_bar, A, b, lamda):
     r = b - A.dot(x_bar)
     R = la.norm(r)
     q = la.norm(A[:, ~supp].T.dot(r), np.inf)
-    if q >= lamda * R:
+    if np.isclose(q, lamda * R) or (q >= lamda * R):
         print("I != J")
         return False
     return True
